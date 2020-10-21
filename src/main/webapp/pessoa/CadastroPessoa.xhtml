@@ -1,0 +1,96 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<ui:define name="titulo">Novo pessoa</ui:define>
+
+	<ui:define name="corpo">
+	
+		<h:form id="formCadastro">
+			<h1>Nova pessoa</h1>		
+			
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:commandButton value="Novo" action="#{pessoaBean.reiniciarPessoaSelecionada}" update="painel"/>
+					<p:commandButton value="Salvar" id="botaoSalvar"
+						actionListener="#{pessoaBean.salvarPessoa}" validateClient="true"  update="listagem:pessoasDataTable, messages,painel " />
+				</p:toolbarGroup>
+				
+				<!-- <p:toolbarGroup align="right">
+					<p:button value="Pesquisa" />
+				</p:toolbarGroup> -->
+			</p:toolbar>
+			<p:messages id="messages" />
+			<p:panelGrid columns="2" id="painel"
+				style="width: 100%; margin-top: 20px" columnClasses="rotulo, campo">
+										
+				<p:outputLabel value="Nome" for="inputTextNome" />				
+				
+				<p:inputText id="id" rendered="false" value="#{pessoaBean.pessoaSelecionada.idPessoa}" />
+				
+				<p:inputText id="inputTextNome" size="60" maxlength="80"
+					value="#{pessoaBean.pessoaSelecionada.nome}" required="true" requiredMessage="O nome deve ser preenchido." />	
+							
+				<p:outputLabel value="CPF" for="cpf" />
+				<p:inputMask id="cpf" mask="999.999.999-99" size="18"
+					value="#{pessoaBean.pessoaSelecionada.cpf}" required="true" requiredMessage="O CPF deve ser preenchido."/>
+
+				<p:outputLabel value="Data Nasc.:" for="dataNasc" />
+				<p:calendar id="dataNasc"
+					value="#{pessoaBean.pessoaSelecionada.dataNasc}" required="true" requiredMessage="A data de nascimento deve ser preenchida."/>
+		
+			</p:panelGrid>
+			
+		</h:form>
+		
+		<h:form id="listagem">
+		
+			<p:spacer />
+			<p:spacer />
+
+			<p:dataTable id="pessoasDataTable" style="margin-top: 20px"
+				emptyMessage="Nenhuma pessoa encontrada." rows="20" paginator="true"
+				paginatorAlwaysVisible="false" paginatorPosition="bottom"
+				 value="#{pessoaBean.pessoas}" var="pessoa" rowKey="#{pessoa.idPessoa}"
+                         selection="#{pessoaBean.pessoaSelecionada}" selectionMode="single">
+				
+				<h:outputText rendered="false" value="#{pessoa.id}" />
+
+				<p:column headerText="Nome">
+					<h:outputText value="#{pessoa.nome}" />
+				</p:column>
+
+				<p:column headerText="CPF">
+					<h:outputText value="#{pessoa.cpf}" />
+				</p:column>
+
+				<p:column headerText="Data Nasc.">
+					<h:outputText value="#{pessoa.dataNasc}" >
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+
+				<p:column style="text-align: center; width: 50px">
+					<p:commandButton icon="ui-icon-pencil" title="Editar" update="formCadastro:painel" >					
+					</p:commandButton> 
+					<p:commandButton icon="ui-icon-trash" title="Excluir"
+					action="#{pessoaBean.deletarPessoa}" update="pessoasDataTable"  onclick="if(!confirm('Confirma a exclusão do registro?')) return false;" />
+				</p:column>
+														
+			</p:dataTable>
+			<p:confirmDialog header="Exclusão de Pessoa"
+				message="Tem certeza que deseja excluir a pessoa?"
+				widgetVar="confirmacaoExclusao" >
+				<p:button value="Não"
+					onclick="confirmacaoExclusao.hide(); return false;" />
+				<p:commandButton value="Sim"
+					oncomplete="confirmacaoExclusao.hide();" />
+			</p:confirmDialog>
+			
+		</h:form>
+						
+	</ui:define>
+</ui:composition>

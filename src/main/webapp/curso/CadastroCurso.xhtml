@@ -1,0 +1,118 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Novo curso</ui:define>
+
+	<ui:define name="corpo">
+
+		<h:form id="formCadastro">
+			<h1>Nova curso</h1>
+
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:commandButton value="Novo"
+						action="#{cursoBean.reiniciarCursoSelecionada}" update="painel" />
+					<p:commandButton value="Salvar" id="botaoSalvar"
+						actionListener="#{cursoBean.salvarCurso}" validateClient="true"
+						update="listagem:cursosDataTable, messages,painel " />
+				</p:toolbarGroup>
+
+				<!-- <p:toolbarGroup align="right">
+					<p:button value="Pesquisa" />
+				</p:toolbarGroup> -->
+			</p:toolbar>
+			<p:messages id="messages" />
+			<p:panelGrid columns="2" id="painel"
+				style="width: 100%; margin-top: 20px" columnClasses="rotulo, campo">
+
+				<p:inputText id="id" rendered="false"
+					value="#{cursoBean.cursoSelecionada.idCurso}" />
+
+				<p:outputLabel value="Nome" for="inputTextNome" />
+				<p:inputText id="inputTextNome" size="60" maxlength="80"
+					value="#{cursoBean.cursoSelecionada.nome}" required="true"
+					requiredMessage="O nome deve ser preenchido." />
+
+				<p:outputLabel value="Nro. Vagas:" for="inputNroVagas" />
+				<p:inputNumber id="inputNroVagas" size="4"
+					value="#{cursoBean.cursoSelecionada.nroVagas}" required="true"
+					requiredMessage="O número de vagas deve ser preenchido." />
+
+				<p:outputLabel value="Data In.:" for="dataInicio" />
+				<p:calendar id="dataInicio"
+					value="#{cursoBean.cursoSelecionada.dataInicio}" required="true"
+					requiredMessage="A data de inicio deve ser preenchida." />
+
+				<p:outputLabel value="Data Fim:" for="dataFim" />
+				<p:calendar id="dataFim"
+					value="#{cursoBean.cursoSelecionada.dataFim}" required="true"
+					requiredMessage="A data de fim deve ser preenchida." />
+				<p:outputLabel value="Idade Min.:" for="inputIdadeMinima" />
+				<p:inputNumber id="inputIdadeMinima" size="4"
+					value="#{cursoBean.cursoSelecionada.idadeMinima}" required="true"
+					requiredMessage="A idade mínima deve ser preenchido." />
+
+			</p:panelGrid>
+
+		</h:form>
+
+		<h:form id="listagem">
+
+			<p:spacer />
+			<p:spacer />
+
+			<p:dataTable id="cursosDataTable" style="margin-top: 20px"
+				emptyMessage="Nenhuma curso encontrada." rows="20" paginator="true"
+				paginatorAlwaysVisible="false" paginatorPosition="bottom"
+				value="#{cursoBean.cursos}" var="curso" rowKey="#{curso.idCurso}"
+				selection="#{cursoBean.cursoSelecionada}" selectionMode="single">
+
+				<h:outputText rendered="false" value="#{curso.id}" />
+
+				<p:column headerText="Curso">
+					<h:outputText value="#{curso.nome}" />
+				</p:column>
+				<p:column headerText="Nro. Vagas">
+					<h:outputText value="#{curso.nroVagas}" />
+				</p:column>
+				<p:column headerText="Data In.">
+					<h:outputText value="#{curso.dataInicio}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Data Fim">
+					<h:outputText value="#{curso.dataFim}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Idade Min.">
+					<h:outputText value="#{curso.idadeMinima}"/>
+				</p:column>
+
+				<p:column style="text-align: center; width: 50px">
+					<p:commandButton icon="ui-icon-pencil" title="Editar"
+						update="formCadastro:painel">
+					</p:commandButton>
+					<p:commandButton icon="ui-icon-trash" title="Excluir"
+						action="#{cursoBean.deletarCurso}" update="cursosDataTable"
+						onclick="if(!confirm('Confirma a exclusão do registro?')) return false;" />
+				</p:column>
+
+			</p:dataTable>
+			<p:confirmDialog header="Exclusão de Curso"
+				message="Tem certeza que deseja excluir a curso?"
+				widgetVar="confirmacaoExclusao">
+				<p:button value="Não"
+					onclick="confirmacaoExclusao.hide(); return false;" />
+				<p:commandButton value="Sim"
+					oncomplete="confirmacaoExclusao.hide();" />
+			</p:confirmDialog>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,5 @@
+0000000000000000000000000000000000000000 2c1033578ac451a534b7fdb61685e56ebeb8fa87 ismaellunkes <lunkes86@gmail.com> 1602885357 -0300	clone: from https://github.com/CETEC-DIGI/01061-2020-013.581.060-45.git
+2c1033578ac451a534b7fdb61685e56ebeb8fa87 937546f75004d47e6294531f7130bf1a4e14a84c ismaellunkes <lunkes86@gmail.com> 1603059220 -0300	commit: Cadastros de aluno e curso concluídos.
+937546f75004d47e6294531f7130bf1a4e14a84c b6a8fb9833732310cedab156b725e7b4fabaf5b8 ismaellunkes <lunkes86@gmail.com> 1603059487 -0300	commit: Remoção do pacote teste HelloWorld
+b6a8fb9833732310cedab156b725e7b4fabaf5b8 eb64ae2f477d05e3a92e1e556499fa1fd436ab34 ismaellunkes <lunkes86@gmail.com> 1603072212 -0300	commit: Adicionando inclusão da matricula
+eb64ae2f477d05e3a92e1e556499fa1fd436ab34 5356430723b13cebb27680d107cea93b9911402c ismaellunkes <lunkes86@gmail.com> 1603075164 -0300	commit: Adicionando validação de matricula

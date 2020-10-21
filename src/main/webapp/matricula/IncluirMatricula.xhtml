@@ -1,0 +1,107 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Novo matricula</ui:define>
+
+	<ui:define name="corpo">
+
+		<h:form id="formCadastro">
+			<h1>Nova matrícula</h1>
+
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:commandButton value="Novo"
+						action="#{matriculaBean.reiniciarMatriculaSelecionada}"
+						update="painel" />
+					<p:commandButton value="Salvar" id="botaoSalvar"
+						actionListener="#{matriculaBean.salvarMatricula}"
+						validateClient="true"
+						update="listagem:matriculasDataTable, messages,painel " />
+				</p:toolbarGroup>
+
+				<!-- <p:toolbarGroup align="right">
+					<p:button value="Pesquisa" />
+				</p:toolbarGroup> -->
+			</p:toolbar>
+			<p:messages id="messages" />
+			<p:panelGrid columns="2" id="painel"
+				style="width: 100%; margin-top: 20px" columnClasses="rotulo, campo">
+		
+				<p:outputLabel value="Aluno" for="optOneTextAluno" requiredMessage="O aluno de ser selecionado. " />
+				<p:selectOneMenu id="optOneTextAluno" value="#{matriculaBean.matriculaSelecionada.pessoa}" converter="pessoaConverter" 
+					style="width:125px"  >
+					<f:selectItems value="#{pessoaBean.pessoas}" var="pessoa" itemLabel="#{pessoa}" itemValue="#{pessoa}"/>
+				</p:selectOneMenu>
+				
+				<p:outputLabel value="Curso" for="optOneTextCurso" requiredMessage="O curso de ser selecionado. " />
+				<p:selectOneMenu id="optOneTextCurso"  value="#{matriculaBean.matriculaSelecionada.curso}" converter="cursoConverter" 
+					style="width:125px">
+					<f:selectItems value="#{cursoBean.cursos}"  var="curso" itemLabel="#{curso}" itemValue="#{curso}"/>
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Data Matrícula:" for="dataMat" />
+				<p:calendar id="dataMat"
+					value="#{matriculaBean.matriculaSelecionada.dataMatricula}" required="true"
+					requiredMessage="A data de matrícula deve ser preenchida." />
+
+			</p:panelGrid>
+
+		</h:form>
+
+		<h:form id="listagem">
+
+			<p:spacer />
+			<p:spacer />
+
+			<p:dataTable id="matriculasDataTable" style="margin-top: 20px"
+				emptyMessage="Nenhuma matricula encontrada." rows="20"
+				paginator="true" paginatorAlwaysVisible="false"
+				paginatorPosition="bottom" value="#{matriculaBean.matriculas}"
+				var="matricula" rowKey="#{matricula.idMatricula}"
+				selection="#{matriculaBean.matriculaSelecionada}"
+				selectionMode="single">
+
+				<h:outputText rendered="false" value="#{matricula.idMatricula}" />
+
+				<p:column headerText="Nome">
+					<h:outputText value="#{matricula.pessoa.nome}" />
+				</p:column>
+				
+				<p:column headerText="Curso">
+					<h:outputText value="#{matricula.curso.nome}" />
+				</p:column>
+
+				<p:column headerText="Data Matricula">
+					<h:outputText value="#{matricula.dataMatricula}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+
+				<p:column style="text-align: center; width: 50px">
+					<p:commandButton icon="ui-icon-pencil" title="Editar"
+						update="formCadastro:painel">
+					</p:commandButton>
+					<p:commandButton icon="ui-icon-trash" title="Excluir"
+						action="#{matriculaBean.deletarMatricula}"
+						update="matriculasDataTable"
+						onclick="if(!confirm('Confirma a exclusão do registro?')) return false;" />
+				</p:column>
+
+			</p:dataTable>
+			<p:confirmDialog header="Exclusão de Matricula"
+				message="Tem certeza que deseja excluir a matricula?"
+				widgetVar="confirmacaoExclusao">
+				<p:button value="Não"
+					onclick="confirmacaoExclusao.hide(); return false;" />
+				<p:commandButton value="Sim"
+					oncomplete="confirmacaoExclusao.hide();" />
+			</p:confirmDialog>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>
