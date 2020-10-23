@@ -21,4 +21,6 @@ public interface CursoService {
 
 	public Curso findByNome(String nome);	
 
+	public Integer vagasDisponiveis(Curso curso, Integer matriculados);
+
 }

@@ -1,5 +1,6 @@
 package br.senai.sc.services;
 
+
 import java.util.List;
 
 import javax.ejb.Local;
@@ -19,6 +20,8 @@ public interface PessoaService {
 
 	public void delete(Pessoa pessoa);
 
-	public Pessoa findByNome(String nome);	
+	public Pessoa findByNome(String nome);
+	
+	public Integer idadePessoa(Pessoa pessoa);
 
 }

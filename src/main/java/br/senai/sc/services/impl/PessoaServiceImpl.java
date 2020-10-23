@@ -1,9 +1,14 @@
 package br.senai.sc.services.impl;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.print.attribute.standard.DateTimeAtCompleted;
 
 import br.senai.sc.daos.PessoaDao;
 import br.senai.sc.models.Pessoa;
@@ -47,6 +52,23 @@ public class PessoaServiceImpl implements PessoaService {
 	@Override
 	public void delete(Pessoa pessoa) {
 		dao.delete(pessoa);
+	}
+
+
+	@Override
+	public Integer idadePessoa(Pessoa pessoa) {
+		int dayInstant = LocalDate.now().getDayOfMonth();
+		int monthInstant = LocalDate.now().getMonthValue();
+		int yearInstant = LocalDate.now().getYear();
+								
+		Date birthPessoa = dao.findById(pessoa.getIdPessoa()).getDataNasc();
+		
+		if ((birthPessoa.getMonth()<monthInstant) ||
+				(birthPessoa.getMonth()==monthInstant && birthPessoa.getDay() <= dayInstant)){
+			return yearInstant-(birthPessoa.getYear()+1900);
+		}else {
+			return yearInstant-(birthPessoa.getYear()+1900)-1;
+		}			
 	}
 
 }

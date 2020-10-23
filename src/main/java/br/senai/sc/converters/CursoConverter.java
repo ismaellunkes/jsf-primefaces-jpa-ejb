@@ -1,13 +1,10 @@
 package br.senai.sc.converters;
 
-import java.util.Map;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
-import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
-import javax.inject.Inject;
 
 import br.senai.sc.models.Curso;
 

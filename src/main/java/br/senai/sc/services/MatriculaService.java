@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.ejb.Local;
 
+import br.senai.sc.models.Curso;
 import br.senai.sc.models.Matricula;
 import br.senai.sc.models.Pessoa;
 
@@ -24,6 +25,14 @@ public interface MatriculaService {
 	
 	public List<Matricula> findByCurso(Matricula matricula);
 
-	public List<Matricula> findByAluno(Pessoa pessoa);
+	public boolean possuiMatriculaCurso(Matricula matricula);
+	
+	public boolean possuiIdadeMinima(Matricula matricula);
+	
+	public Integer vagasDisponiveis(Matricula matricula);
+
+	public boolean possuiVagas(Matricula matricula);
+	
+	public boolean dataMatriculaAntesInicioCurso(Matricula matricula);
 
 }

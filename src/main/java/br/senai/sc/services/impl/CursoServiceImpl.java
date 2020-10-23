@@ -49,4 +49,9 @@ public class CursoServiceImpl implements CursoService {
 		dao.delete(curso);
 	}
 
+	@Override
+	public Integer vagasDisponiveis(Curso curso, Integer matriculados) {		
+		return dao.findById(curso.getIdCurso()).getNroVagas() - matriculados;
+	}
+
 }

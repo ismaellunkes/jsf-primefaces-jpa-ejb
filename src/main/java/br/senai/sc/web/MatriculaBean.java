@@ -3,29 +3,18 @@
  */
 package br.senai.sc.web;
 
-import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
-
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
-
-import br.senai.sc.models.Curso;
 import br.senai.sc.models.Matricula;
-import br.senai.sc.models.Pessoa;
-import br.senai.sc.services.CursoService;
-import br.senai.sc.services.DateServices;
 import br.senai.sc.services.MatriculaService;
-import br.senai.sc.services.PessoaService;
-import br.senai.sc.services.impl.PessoaServiceImpl;
+
 
 /**
  * @author ismael
@@ -37,12 +26,6 @@ public class MatriculaBean {
 
 	@Inject
 	private MatriculaService matriculaService;
-
-	@Inject
-	private CursoService cursoService;
-
-	@Inject
-	private PessoaService pessoaService;
 
 	private Matricula matriculaSelecionada;
 
@@ -90,11 +73,8 @@ public class MatriculaBean {
 		if (matriculaSelecionada.getCurso() != null && matriculaSelecionada.getCurso().getIdCurso() != null
 				&& matriculaSelecionada.getPessoa() != null && matriculaSelecionada.getPessoa().getIdPessoa() != null) {
 
-			Pessoa pessoa = pessoaService.findById((matriculaSelecionada.getPessoa().getIdPessoa()));
-
-			Curso curso = cursoService.findById((matriculaSelecionada.getCurso().getIdCurso()));
-
-			if (matriculaService.findByCurso(matriculaSelecionada).size() > curso.getNroVagas()) {
+			///Valida se curso possui vagas
+			if (!matriculaService.possuiVagas(matriculaSelecionada)) {
 
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Número de vagas excedido.",
 						"Vagas");
@@ -103,7 +83,8 @@ public class MatriculaBean {
 
 			}
 
-			if (matriculaSelecionada.getDataMatricula().after(curso.getDataInicio())) {
+			//valida se data da matricula é antes do inicio do curso
+			if (!matriculaService.dataMatriculaAntesInicioCurso(matriculaSelecionada)) {
 
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN,
 						"Data da matrícula não pode ser após inicio do curso.", "Datas");
@@ -111,24 +92,24 @@ public class MatriculaBean {
 				validacoesPendentes = true;
 
 			}
-
-			/// Validar se aluno não está matriculado no curso
-			if (pessoa != null && pessoa.getIdPessoa() != null && matriculaService.findByAluno(pessoa).size() > 0) {
+	
+			/// Valida se aluno não está matriculado no curso
+			if (matriculaService.possuiMatriculaCurso(matriculaSelecionada)) {
 
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN,
-						"Aluno possui matrícula ativa em outro curso.", "Matricula Ativa");
+						"Aluno possui matrícula ativa no curso.", "Matricula Ativa");
 				FacesContext.getCurrentInstance().addMessage("optOneTextAluno", message);
 				validacoesPendentes = true;
 
 			}
 
 			/// Validar se aluno tem idade minima para realizar o curso
-			if (curso != null && curso.getIdCurso() != null && pessoa != null && pessoa.getIdPessoa() != null) {
-
-//				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN,
-//						"Aluno não possui idade mínima para matricula neste curso.", "Idade minima.");
-//				FacesContext.getCurrentInstance().addMessage("optOneTextAluno", message);
-//				validacoesPendentes = true;
+			if (!matriculaService.possuiIdadeMinima(matriculaSelecionada)) {
+				
+				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN,
+						"Aluno não possui idade mínima para matricula neste curso.", "Idade minima.");
+				FacesContext.getCurrentInstance().addMessage("optOneTextAluno", message);
+				validacoesPendentes = true;
 
 			}
 		}

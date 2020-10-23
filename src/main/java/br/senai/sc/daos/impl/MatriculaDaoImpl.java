@@ -7,6 +7,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import br.senai.sc.daos.MatriculaDao;
+import br.senai.sc.models.Curso;
 import br.senai.sc.models.Matricula;
 import br.senai.sc.models.Pessoa;
 
@@ -60,10 +61,19 @@ public class MatriculaDaoImpl implements MatriculaDao {
 	}
 
 	@Override
-	public List<Matricula> findByAluno(Pessoa pessoa) {
-		Query query = em.createQuery(" SELECT m FROM Matricula m WHERE m.pessoa = :pessoa ");		
+	public List<Matricula> findByAlunoCurso(Pessoa pessoa, Curso curso) {
+		Query query = em.createQuery(" SELECT m FROM Matricula m WHERE m.pessoa = :pessoa and m.curso = :curso ");		
 		query.setParameter("pessoa", pessoa);
+		query.setParameter("curso", curso);
 		return query.getResultList();
+	}
+
+	@Override
+	public boolean possuiMatriculaCurso(Pessoa pessoa, Curso curso) {
+		Query query = em.createQuery(" SELECT m FROM Matricula m WHERE m.pessoa = :pessoa and m.curso = :curso ");		
+		query.setParameter("pessoa", pessoa);
+		query.setParameter("curso", curso);
+		return query.getResultList().size()>0?true:false;
 	}
 
 }
